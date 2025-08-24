@@ -1,13 +1,13 @@
 Next Steps
 1. Sentence Creation for Accessibility
 
-Goal: Enable disabled users to create and use predefined sentences.
+Goal: Enable disabled users to create and use predefined sentences. ( Done)
 
-1.1 Sentences will be read directly on the frontend to optimize performance.
+1.1 Sentences will be read directly on the frontend to optimize performance.  (In The Front)
 
-1.2 The text will be saved in the database for persistence and later use.
+1.2 The text will be saved in the database for persistence and later use.   ( Done)
 
-2. Authentication Enhancements
+2. Authentication Enhancements  (In-progrss)
 
 2.1 Add verification code during the registration process for increased security.
 
