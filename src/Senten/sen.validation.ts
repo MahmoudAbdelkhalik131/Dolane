@@ -12,6 +12,7 @@ class Validation {
         min: 10,
       })
       .withMessage("Legth must be betwen 10 and 1000"),
+      body("favorite").notEmpty().withMessage("favorite is required"),
     validatorMiddleware,
   ];
   update = [
