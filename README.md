@@ -25,3 +25,5 @@ Feedback and suggestions are always welcome.
 
 Any advice to improve accessibility, performance, or security will be highly valued.
 
+3 - Adding translation for the project in [Arabic,English]
+ 3.1 using i18n (Advanced Feature). 
