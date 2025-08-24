@@ -2,8 +2,8 @@ import express from 'express'
 import userRouter from './src/users/user.routes'
 import { Error } from 'mongoose';
 import { errorHandler } from './src/middleware/Error';
-import router from './src/openapi/openAI.routes';
-
+import router from './src/FromVioceToTextModel/openAI.routes';
+import senRouter from './src/Senten/sen.routes';
 
 
 
@@ -20,9 +20,7 @@ declare module "express" {
 const Routes =(app:express.Application)=>{
 app.use('/api/v1/user',userRouter)
 app.use('/api/v1/AI',router)
-
-
-
+app.use('/api/v1/senten',senRouter)
 app.use(errorHandler)
 
 }
