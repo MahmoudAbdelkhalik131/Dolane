@@ -5,5 +5,7 @@ interface User extends mongoose.Document{
     email: string;
     password: string;
     role: 'user' | 'admin';
+    verifyCode:string;
+    validUser:boolean;
 }
 export default User;

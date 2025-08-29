@@ -43,7 +43,6 @@ class Validation {
         }
         return true;
       }),
-
     validatorMiddleware,
   ];
 }
