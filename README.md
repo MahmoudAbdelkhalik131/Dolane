@@ -1,29 +1,36 @@
-Next Steps
-1. Sentence Creation for Accessibility
+# Dolane Project Roadmap
 
-Goal: Enable disabled users to create and use predefined sentences. ( Done)
+## 🚀 Next Steps
 
-1.1 Sentences will be read directly on the frontend to optimize performance.  (In The Front)
+### 1. Sentence Creation for Accessibility
+- **Goal:** Enable disabled users to create and use predefined sentences. ✅
+- **Frontend Optimization:** Sentences are read directly on the frontend for better performance. *(In Progress)*
+- **Persistence:** Text is saved in the database for future use. ✅
 
-1.2 The text will be saved in the database for persistence and later use.   ( Done)
+---
 
-2. Authentication Enhancements  (In-progrss)
+### 2. Authentication Enhancements
+- **Verification Code:** Add verification code during registration for increased security. ✅
+- **Password Reset:** Implement password reset functionality. *(In Progress)*
 
-2.1 Add verification code during the registration process for increased security.
+---
 
-2.2 Implement password reset functionality:
+### 3. Multilingual Support
+- **Translation:** Project supports both Arabic and English. ✅
+- **Technology:** Uses [i18n](https://www.npmjs.com/package/i18n) for advanced translation features.
 
-A reset code will be generated and sent to the user.
+---
 
-The user can use this code to securely reset their password.
+### 4. Password Reset Flow
+- A reset code is generated and sent to the user.
+- The user can use this code to securely reset their password.
 
-3. Suggestions & Continuous Improvement
+---
+
+## 💡 Suggestions & Continuous Improvement
 
 This project follows an iterative approach—just like how humans learn.
 
-Feedback and suggestions are always welcome.
+**Feedback and suggestions are always welcome!**
 
-Any advice to improve accessibility, performance, or security will be highly valued.
-
-3 - Adding translation for the project in [Arabic,English]
- 3.1 using i18n (Advanced Feature). 
+Any advice to improve accessibility, performance, or security
