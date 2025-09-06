@@ -26,6 +26,19 @@
 - The user can use this code to securely reset their password.
 
 ---
+---
+
+### 5. Chat History
+- **Create Chat:** Enable the user to enter what he need. ✅
+- **Get user Chat :**Enable the user to see all of his different chats.
+
+--
+---
+
+### 6. Security Improvements
+- Still under developing 
+
+---
 
 ## 💡 Suggestions & Continuous Improvement
 

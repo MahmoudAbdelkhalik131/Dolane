@@ -66,6 +66,30 @@ class UserServices {
       return next(new ErrorHandler(404,`${req.__("check_login")}`))
      }
   })
+  // Still under Development
+  ResetPassword=AsyncHandler(async(req: Request, res: Response, next: NextFunction)=>{
+     if(req.headers.authorization){
+      const token = req.headers.authorization.split(" ")[1];
+      if(!token){
+        return next(new ErrorHandler(401,`${req.__("check_active")}`))
+      }
+      const decode:any= Jwt.verifyToken(token);
+      const user =await userSchema.findById(decode.user._id.toString())
+      if(!user){
+        return next(new ErrorHandler(400,`${req.__("allowed_to")}`))
+      }
+      if(req.body.verifyCode!==user.verifyCode){
+        return next (new ErrorHandler(400,`${req.__("check_code_valid")}`))
+      }
+      user.validUser=true;
+      user.verifyCode=await bcrypt.hash(user.verifyCode,10)
+      user.save()
+      res.status(200).json({message:"You have registared successfully"})
+     }
+     else{
+      return next(new ErrorHandler(404,`${req.__("check_login")}`))
+     }
+  })
 }
 const userSevices = new UserServices();
 export default userSevices;
