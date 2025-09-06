@@ -3,15 +3,12 @@ import { WaveFile } from "wavefile";
 import fs from "fs";
 import ffmpeg from "fluent-ffmpeg";
 import ffmpegPath from "ffmpeg-static";
-import { promisify } from "util";
 import { tmpdir } from "os";
 import path from "path";
-import { pathToFileURL } from "url";
-import { LanguageVariant } from "typescript";
 
 ffmpeg.setFfmpegPath(ffmpegPath!);
 
-let transcriber:any;
+let transcriber: any;
 
 // تحميل الموديل مرة واحدة
 async function loadModel() {
@@ -19,15 +16,14 @@ async function loadModel() {
     transcriber = await pipeline(
       "automatic-speech-recognition",
       "Xenova/whisper-small",
-        { dtype: "fp16" },
-      
+      { dtype: "fp16" }
     );
   }
   return transcriber;
 }
 
 // 🔄 تحويل أي ملف صوت (mp3 → wav 16k mono)
-async function convertToWav(inputPath:any) {
+async function convertToWav(inputPath: any) {
   return new Promise((resolve, reject) => {
     const outputPath = path.join(tmpdir(), `${Date.now()}.wav`);
 
@@ -41,16 +37,16 @@ async function convertToWav(inputPath:any) {
   });
 }
 
-export async function transcribeAudio(filePath:any) {
+export async function transcribeAudio(filePath: any) {
   try {
     // أول حاجة: حوّل الملف لو wav
-    const wavPath:any = await convertToWav(filePath);
+    const wavPath: any = await convertToWav(filePath);
     const buffer = fs.readFileSync(wavPath);
 
     // جهّز ملف wav
     let wav = new WaveFile(buffer);
-    wav.toBitDepth("32f")
-    wav.toSampleRate(16000)
+    wav.toBitDepth("32f");
+    wav.toSampleRate(16000);
 
     let audioData = wav.getSamples();
     if (Array.isArray(audioData)) {
@@ -66,18 +62,18 @@ export async function transcribeAudio(filePath:any) {
 
     const model = await loadModel();
     const output = await transcriber(audioData, {
-  chunk_length_s: 30,//قسم الصوت لمقاطع 30 ثانية
-  stride_length_s: 5 ,
-    language: "ar",
-  task: "transcribe" // يعمل overlap 5 ثواني بين المقاطع لتجنب ضياع كلمات
-});
-
+      chunk_length_s: 30, //قسم الصوت لمقاطع 30 ثانية
+      stride_length_s: 5,
+      language: "ar",
+      task: "transcribe", // يعمل overlap 5 ثواني بين المقاطع لتجنب ضياع كلمات
+    });
 
     // نظّف الملفات المؤقتة
     fs.unlinkSync(wavPath);
+    fs.unlinkSync(filePath);
 
     return output;
-  } catch (err:any) {
+  } catch (err: any) {
     console.error("Error in transcribeAudio:", err.message);
     throw err;
   }
