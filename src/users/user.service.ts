@@ -22,6 +22,9 @@ class UserServices {
     if (password === false) {
       return next(new ErrorHandler(400, "Invalid email or password"));
     }
+    if(user.validUser==false){
+      return next(new ErrorHandler(401,"Please Verify your email before login ....."))
+    }
     const token = Jwt.createToken(user);
     res.status(200).json({ data: user, token: token });
   };
@@ -41,7 +44,7 @@ class UserServices {
     user.verifyCode=verifyCode
     user.save({validateModifiedOnly:true})
     const token=Jwt.createToken(user)
-    res.status(200).json({data:user,token:token,message:"verification code sent successfully"})
+    res.status(200).json({token:token,message:"verification code sent successfully Please check your email"})
   };
   verifyCode=AsyncHandler(async(req: Request, res: Response, next: NextFunction)=>{
      if(req.headers.authorization){
