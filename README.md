@@ -21,7 +21,7 @@
 
 ---
 
-### 4. Password Reset Flow
+### 4. Password Reset Flow  ✅
 - A reset code is generated and sent to the user.
 - The user can use this code to securely reset their password.
 
