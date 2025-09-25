@@ -6,6 +6,7 @@ import { Request, Response, NextFunction } from "express";
 import AsyncHandler from "express-async-handler";
 import sendEmail from "../utils/sendMail";
 import ErrorHandler from "../middleware/Error";
+import { json } from "stream/consumers";
 class UserServices {
   gettAllUser = async (req: Request, res: Response, next: NextFunction) => {
     const users: User[] | null = await userSchema.find();
@@ -70,7 +71,23 @@ class UserServices {
      }
   })
   // Still under Development
-  ResetPassword=AsyncHandler(async(req: Request, res: Response, next: NextFunction)=>{
+  ResetPasswordCode=AsyncHandler(async(req: Request, res: Response, next: NextFunction)=>{
+    const verifyCode = Math.floor(100000 + Math.random() * 900000).toString();
+    const user:User|null=await userSchema.findOne({email:req.body.email}) 
+    if(!user){
+      return next(new ErrorHandler(404,"You are not exist"))
+    }
+    await sendEmail({
+      verifyCode: verifyCode,
+      subject: "You verification code is ",
+      email: user.email.toString(),
+    })
+    user.forgetPasswordCode=verifyCode
+    await user.save()
+    const token=Jwt.createToken(user)
+    res.status(200).json({message:"The code send succefully",token:token})
+  })
+  verifyCodeForgetPasswordCode=AsyncHandler(async(req: Request, res: Response, next: NextFunction)=>{
      if(req.headers.authorization){
       const token = req.headers.authorization.split(" ")[1];
       if(!token){
@@ -81,13 +98,32 @@ class UserServices {
       if(!user){
         return next(new ErrorHandler(400,`${req.__("allowed_to")}`))
       }
-      if(req.body.verifyCode!==user.verifyCode){
+      if(req.body.verifyCode!==user.forgetPasswordCode){
         return next (new ErrorHandler(400,`${req.__("check_code_valid")}`))
       }
-      user.validUser=true;
-      user.verifyCode=await bcrypt.hash(user.verifyCode,10)
-      user.save()
-      res.status(200).json({message:"You have registared successfully"})
+      user.forgetPasswordCode=await bcrypt.hash(user.forgetPasswordCode,10)
+      await user.save()
+      const Token=Jwt.createToken(user)
+      res.status(200).json({message:"Code Verified successfully",token:Token})
+     }
+     else{
+      return next(new ErrorHandler(404,`${req.__("check_login")}`))
+     }
+  })
+    reserPassword=AsyncHandler(async(req: Request, res: Response, next: NextFunction)=>{
+     if(req.headers.authorization){
+      const token = req.headers.authorization.split(" ")[1];
+      if(!token){
+        return next(new ErrorHandler(401,`${req.__("check_active")}`))
+      }
+      const decode:any= Jwt.verifyToken(token);
+      const user =await userSchema.findById(decode.user._id.toString())
+      if(!user){
+        return next(new ErrorHandler(400,`${req.__("allowed_to")}`))
+      }
+      user.password=await bcrypt.hash(req.body.password, 10)
+      res.status(200).json({message:"Password Reset Successfully"})
+     await user.save()
      }
      else{
       return next(new ErrorHandler(404,`${req.__("check_login")}`))
