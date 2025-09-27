@@ -82,7 +82,7 @@ class UserServices {
       subject: "You verification code is ",
       email: user.email.toString(),
     })
-    user.forgetPasswordCode=verifyCode
+    user.forgetPasswordCode= await bcrypt.hash(verifyCode,10)
     await user.save()
     const token=Jwt.createToken(user)
     res.status(200).json({message:"The code send succefully",token:token})
@@ -98,19 +98,18 @@ class UserServices {
       if(!user){
         return next(new ErrorHandler(400,`${req.__("allowed_to")}`))
       }
-      if(req.body.verifyCode!==user.forgetPasswordCode){
-        return next (new ErrorHandler(400,`${req.__("check_code_valid")}`))
-      }
-      user.forgetPasswordCode=await bcrypt.hash(user.forgetPasswordCode,10)
-      await user.save()
+      const Isvalid = await bcrypt.compare(req.body.verifyCode, user.forgetPasswordCode);
+    if (Isvalid === false) {
+      return next(new ErrorHandler(400, "Invalid Code"));
+    }
       const Token=Jwt.createToken(user)
       res.status(200).json({message:"Code Verified successfully",token:Token})
      }
      else{
-      return next(new ErrorHandler(404,`${req.__("check_login")}`))
+      return next(new ErrorHandler(404,`${req.__("check_reset_code")}`))
      }
   })
-    reserPassword=AsyncHandler(async(req: Request, res: Response, next: NextFunction)=>{
+    resetPassword=AsyncHandler(async(req: Request, res: Response, next: NextFunction)=>{
      if(req.headers.authorization){
       const token = req.headers.authorization.split(" ")[1];
       if(!token){
@@ -126,7 +125,7 @@ class UserServices {
      await user.save()
      }
      else{
-      return next(new ErrorHandler(404,`${req.__("check_login")}`))
+      return next(new ErrorHandler(404,`${req.__("check_reset_code")}`))
      }
   })
 }

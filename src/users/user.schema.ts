@@ -6,6 +6,7 @@ const UserSchema =new mongoose.Schema<User>({
     email:{type:String,required: true},
     role:{type:String,enum:['user','admin'],default:'user'},
     verifyCode:{type:String},
+    forgetPasswordCode:{type:String},
     validUser:{type:Boolean,default:false}
 
 },{timestamps:true});
